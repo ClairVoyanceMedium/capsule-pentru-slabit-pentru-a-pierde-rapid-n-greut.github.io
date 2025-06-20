@@ -1,42 +1,283 @@
-# Indique aux robots que toutes les pages peuvent être explorées, sauf restrictions spécifiées
+# robots.txt v3.5 - 2025-05-28
+# Optimizat pentru https://clairvoyancemedium.github.io/capsule-pentru-slabit-pentru-a-pierde-rapid-n-greut.github.io/
+# Obiective: SEO global, crawl ultra-frecvent, suport pentru IA/asistenți vocali/rețele sociale, multilingv, protecție maximă
+
+# --- Directive generale pentru toți crawlerii legitimi ---
 User-agent: *
-Disallow: /admin/
-Disallow: /tmp/
-Disallow: /private/
+Allow: /
+Allow: /[a-z]{2}/  # Pagini multilingve (/ro/, /en/, /es/, etc.)
+Allow: /termeni/    # Termeni și condiții publice
+Allow: /fonturi/    # Fonturi pentru afișare
+Allow: /imagini/    # Imagini pentru indexare
+Allow: /js/         # Scripturi interactive
+Allow: /css/        # CSS mobile-first
+Allow: /*.webp$     # Imagini WebP
+Allow: /*.jpg$      # Imagini JPG
+Allow: /*.png$      # Imagini PNG
+Allow: /*.gif$      # Imagini GIF
+Allow: /*.js$       # Scripturi JavaScript
+Allow: /*.css$      # Fișiere CSS
+Disallow: /csp-raport-endpoint/  # Protecție CSP
+Disallow: /contact/             # Pagina de contact
+Disallow: /confidentialitate/   # Politica de confidențialitate
+Disallow: /plata/               # Căi tranzacționale
+Disallow: /cautare/             # Pagini de căutare
+Disallow: /api/                 # Endpoint-uri API
+Disallow: /test/                # Dosare de testare
+Disallow: /staging/             # Medii de staging
+Clean-param: utm_source&utm_medium&utm_campaign&lang&session_id  # Permite parametri utili
 
-# Bloquer des URL avec paramètres inutiles pour l'indexation
-Disallow: /*?debug=true
-Disallow: /*?preview=true
-
-# Permettre les fichiers nécessaires au bon affichage et fonctionnement
-Allow: /css/
-Allow: /js/
-Allow: /images/
-
-# Référencement des ressources multimédias
-Allow: *.png
-Allow: *.jpg
-Allow: *.webp
-Allow: *.css
-Allow: *.js
-
-# Fournir le chemin du fichier sitemap pour une meilleure indexation
-Sitemap: https://www.clairvoyancemedium.com/sitemap.xml
-
-# Autorisation pour les robots Google et Bing pour maximiser les campagnes publicitaires
+# --- Directive pentru Googlebot (Google, Google Assistant) ---
 User-agent: Googlebot
+Crawl-delay: 1
+Allow: /blog/       # Conținut bogat pentru SEO
+Allow: /articol/    # Articole pentru snippet-uri
+Clean-param: utm_source&utm_medium&utm_campaign&lang
+Disallow: /csp-raport-endpoint/
+Disallow: /contact/
+Disallow: /confidentialitate/
+Disallow: /plata/
+
+# --- Directive pentru Googlebot-Image ---
+User-agent: Googlebot-Image
+Allow: /imagini/
+Allow: /*.webp$
+Allow: /*.jpg$
+Allow: /*.png$
+Allow: /*.gif$
+Disallow: /favicon_optimized.webp  # Evită favicon
+
+# --- Directive pentru Googlebot-Video ---
+User-agent: Googlebot-Video
+Crawl-delay: 1
 Allow: /
-User-agent: AdsBot-Google
-Allow: /
+Allow: /[a-z]{2}/
+Disallow: /csp-raport-endpoint/
+Disallow: /contact/
+Disallow: /confidentialitate/
+Disallow: /plata/
+
+# --- Directive pentru Bingbot (Bing, Cortana) ---
 User-agent: Bingbot
+Crawl-delay: 2
+Allow: /blog/
+Allow: /articol/
+Clean-param: utm_source&utm_medium&utm_campaign&lang
+Disallow: /csp-raport-endpoint/
+Disallow: /contact/
+Disallow: /confidentialitate/
+Disallow: /plata/
+
+# --- Directive pentru Yandex (Yandex, Alice) ---
+User-agent: Yandex
+Crawl-delay: 3
+Allow: /blog/
+Allow: /articol/
+Clean-param: utm_source&utm_medium&utm_campaign&lang&session_id
+Disallow: /csp-raport-endpoint/
+Disallow: /contact/
+Disallow: /confidentialitate/
+Disallow: /plata/
+
+# --- Directive pentru Baiduspider (China) ---
+User-agent: Baiduspider
+Crawl-delay: 3
+Allow: /zh/        # Prioritate chineză
+Allow: /blog/
+Allow: /articol/
+Clean-param: lang
+Disallow: /csp-raport-endpoint/
+Disallow: /contact/
+Disallow: /confidentialitate/
+Disallow: /plata/
+Disallow: /api/
+Disallow: /test/
+Disallow: /staging/
+
+# --- Directive pentru Sogou (China) ---
+User-agent: Sogou
+Crawl-delay: 4
+Allow: /zh/
+Allow: /blog/
+Allow: /articol/
+Clean-param: lang
+Disallow: /csp-raport-endpoint/
+Disallow: /contact/
+Disallow: /confidentialitate/
+Disallow: /plata/
+Disallow: /api/
+Disallow: /test/
+Disallow: /staging/
+
+# --- Directive pentru Applebot (Siri, Apple) ---
+User-agent: Applebot
+Crawl-delay: 2
+Allow: /blog/
+Allow: /articol/
+Clean-param: utm_source&utm_medium&utm_campaign&lang
+Disallow: /csp-raport-endpoint/
+Disallow: /contact/
+Disallow: /confidentialitate/
+Disallow: /plata/
+
+# --- Directive pentru Amazonbot (Alexa, Amazon) ---
+User-agent: Amazonbot
+Crawl-delay: 3
+Allow: /blog/
+Allow: /articol/
+Clean-param: utm_source&utm_medium&utm_campaign&lang
+Disallow: /csp-raport-endpoint/
+Disallow: /contact/
+Disallow: /confidentialitate/
+Disallow: /plata/
+
+# --- Directive pentru Naverbot (Japonia/Coreea) ---
+User-agent: Naverbot
+Crawl-delay: 3
+Allow: /ja/        # Prioritate japoneză
+Allow: /ko/        # Prioritate coreeană
+Allow: /blog/
+Allow: /articol/
+Clean-param: lang
+Disallow: /csp-raport-endpoint/
+Disallow: /contact/
+Disallow: /confidentialitate/
+Disallow: /plata/
+
+# --- Directive pentru SeznamBot (Republica Cehă) ---
+User-agent: SeznamBot
+Crawl-delay: 3
+Allow: /cs/        # Prioritate cehă
+Allow: /blog/
+Allow: /articol/
+Clean-param: lang
+Disallow: /csp-raport-endpoint/
+Disallow: /contact/
+Disallow: /confidentialitate/
+Disallow: /plata/
+
+# --- Directive pentru Qwantify (Qwant, Europa) ---
+User-agent: Qwantify
+Crawl-delay: 4
+Allow: /fr/        # Prioritate franceză
+Allow: /blog/
+Allow: /articol/
+Clean-param: lang
+Disallow: /csp-raport-endpoint/
+Disallow: /contact/
+Disallow: /confidentialitate/
+Disallow: /plata/
+
+# --- Directive pentru DuckDuckGoBot (Global) ---
+User-agent: DuckDuckGoBot
+Crawl-delay: 2
 Allow: /
+Allow: /[a-z]{2}/
+Allow: /blog/
+Allow: /articol/
+Clean-param: utm_source&utm_medium&utm_campaign&lang
+Disallow: /csp-raport-endpoint/
+Disallow: /contact/
+Disallow: /confidentialitate/
+Disallow: /plata/
 
-# Bloquer les robots nuisibles ou non désirés
-User-agent: BadBot
-Disallow: /
-User-agent: EvilScraper
+# --- Directive pentru JioSphere (India) ---
+User-agent: JioSphere
+Crawl-delay: 3
+Allow: /hi/        # Prioritate hindi
+Allow: /blog/
+Allow: /articol/
+Clean-param: lang
+Disallow: /csp-raport-endpoint/
+Disallow: /contact/
+Disallow: /confidentialitate/
+Disallow: /plata/
+
+# --- Directive pentru crawlerii AI conversaționali ---
+User-agent: Grok
+User-agent: ChatGPT-User
+User-agent: GPTBot
+User-agent: openai-crawler
+User-agent: ClaudeBot
+User-agent: anthropic-ai
+User-agent: cohere-ai
+User-agent: PerplexityBot
+User-agent: CCBot
+User-agent: youbot
+User-agent: phindbot
+User-agent: GeminiBot  # Google AI
+Crawl-delay: 4
+Allow: /
+Allow: /[a-z]{2}/
+Allow: /blog/      # Extrase conversaționale
+Allow: /articol/
+Allow: /imagini/
+Allow: /*.webp$
+Allow: /*.jpg$
+Allow: /*.png$
+Allow: /*.gif$
+Clean-param: utm_source&utm_medium&utm_campaign&lang
+Disallow: /csp-raport-endpoint/
+Disallow: /contact/
+Disallow: /confidentialitate/
+Disallow: /plata/
+Disallow: /api/
+Disallow: /test/
+Disallow: /staging/
+
+# --- Directive pentru crawlerii rețelelor sociale ---
+User-agent: FacebookBot
+User-agent: Twitterbot
+User-agent: redditbot
+User-agent: TikTokBot  # Rețele sociale emergente
+Crawl-delay: 2
+Allow: /
+Allow: /[a-z]{2}/
+Allow: /blog/      # Previzualizări sociale
+Allow: /articol/
+Allow: /imagini/
+Allow: /*.webp$
+Allow: /*.jpg$
+Allow: /*.png$
+Allow: /*.gif$
+Clean-param: utm_source&utm_medium&utm_campaign&lang
+Disallow: /csp-raport-endpoint/
+Disallow: /contact/
+Disallow: /confidentialitate/
+Disallow: /plata/
+
+# --- Blocare crawleri nedoriți ---
+User-agent: MJ12bot
+User-agent: AhrefsBot
+User-agent: PetalBot
+User-agent: DotBot
 Disallow: /
 
-# Empêcher l'exploration des fichiers sensibles
-Disallow: /config/
-Disallow: /backup/
+# --- Permitere SemrushBot pentru audituri SEO ---
+User-agent: SemrushBot
+Crawl-delay: 5
+Allow: /
+Allow: /[a-z]{2}/
+Allow: /blog/
+Allow: /articol/
+Allow: /imagini/
+Allow: /*.webp$
+Allow: /*.jpg$
+Allow: /*.png$
+Allow: /*.gif$
+Clean-param: utm_source&utm_medium&utm_campaign&lang
+Disallow: /csp-raport-endpoint/
+Disallow: /contact/
+Disallow: /confidentialitate/
+Disallow: /plata/
+
+# --- Protecție împotriva crawlerilor nerecunoscuți ---
+User-agent: *
+Disallow: /  # Blocare implicită exceptând cele permise explicit
+
+# --- Optimizare crawl ---
+Crawl-delay: 1
+Request-rate: 1/4  # 1 cerere/4s pentru crawl rapid
+
+# --- Index sitemap ---
+Sitemap: https://clairvoyancemedium.github.io/capsule-pentru-slabit-pentru-a-pierde-rapid-n-greut.github.io/sitemap-index.xml
