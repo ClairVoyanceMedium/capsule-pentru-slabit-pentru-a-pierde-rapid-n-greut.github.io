@@ -1851,6 +1851,647 @@
     </p>
 </footer>
 
+<!-- Chat IA complet -->
+
+<title>Chat IA cu Tracking și Asistent Vocal</title>
+
+    <meta name="description" content="Chatbot spiritual pentru dezvrăjire, protecție și purificare de aură de către Frederick de la ClairVoyanceMedium.com. Regăsește vitalitatea și liniștea rapid la un preț unic.">
+
+    <meta name="keywords" content="vrăjit, coșmaruri, dezvrăjire, protecție, purificare, curățare energetică, clarviziune, aură, energie, nevoie, ajutor, somn, ritualuri, spiritual">
+
+    <style>
+        #chat-container {
+            position: fixed;
+            display: inline-block;
+            flex-direction: column;
+            z-index: 999999;
+            font-family: Arial, sans-serif;
+            transition: transform 0.2s;
+        }
+        #chat-bubble {
+            display: flex;
+            justify-content: flex-end;
+            cursor: move;
+        }
+        #chat-toggle {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(145deg, #FFB6C1, #FF69B4);
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            box-shadow: 0 4px 12px rgba(255,105,180,0.7);
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s;
+            outline: none;
+        }
+        #chat-toggle:hover {
+            transform: scale(1.05);
+        }
+        #voice-toggle {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(145deg, #87CEEB, #5eb6d1);
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(135,206,235,0.7);
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 10px;
+            transition: transform 0.2s;
+            outline: none;
+        }
+        #voice-toggle:hover {
+            transform: scale(1.05);
+        }
+        #voice-toggle.disabled {
+            background: #808080;
+            box-shadow: 0 0 10px #808080;
+        }
+        #chat-box {
+            background: #111;
+            border-radius: 10px;
+            display: none;
+            flex-direction: column;
+            margin-top: 10px;
+            border: 2px solid #FF1493;
+            box-shadow: 0 0 10px #FF1493;
+            transition: all 0.3s ease;
+            max-height: 400px;
+        }
+        #chat-box.visible {
+            display: flex;
+        }
+        #chat-messages {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            color: #fff;
+        }
+        #chat-messages p {
+            margin-bottom: 0.5rem;
+            line-height: 1.4;
+            opacity: 0;
+            animation: fadeIn 0.5s forwards;
+        }
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+        .bot-message {
+            text-align: left;
+            color: #fff;
+            background: rgba(255,255,255,0.05);
+            padding: 0.5rem;
+            border-radius: 5px;
+            margin-bottom: 0.8rem;
+            display: inline-block;
+            max-width: 80%;
+            border: 2px solid #FF69B4;
+            box-shadow: 0 0 8px #FF69B4;
+        }
+        .user-message {
+            text-align: right;
+            color: #ffd700;
+            margin-bottom: 0.8rem;
+            border: 2px solid #AED6F1;
+            box-shadow: 0 0 8px #AED6F1;
+            padding: 0.5rem;
+            border-radius: 5px;
+            display: inline-block;
+            max-width: 80%;
+        }
+        #chat-form {
+            display: flex;
+            border-top: 1px solid #333;
+            align-items: center;
+            padding: 0.5rem;
+        }
+        #chat-input {
+            flex: 1;
+            padding: 0.5rem;
+            border: none;
+            outline: none;
+            color: #333;
+            border-radius: 5px 0 0 5px;
+        }
+        #chat-send {
+            background: #87CEEB;
+            border: none;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            color: #fff;
+            font-weight: bold;
+            border-radius: 0 5px 5px 0;
+            transition: background 0.2s;
+        }
+        #chat-send:hover {
+            background: #5eb6d1;
+        }
+        @media(max-width: 400px) {
+            #chat-container {
+                width: 90%;
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+
+<div id="chat-container">
+    <div id="chat-bubble">
+        <button id="chat-toggle" aria-expanded="false" aria-label="Deschide chatul">💬</button>
+        <button id="voice-toggle" aria-label="Activează/Dezactivează asistentul vocal">🎤</button>
+    </div>
+    <div id="chat-box" role="region" aria-label="Chat IA">
+        <div id="chat-messages" aria-live="polite"></div>
+        <form id="chat-form" aria-label="Formular de introducere pentru Chatul IA">
+            <input type="text" id="chat-input" placeholder="Puneți întrebarea dumneavoastră..." aria-label="Tastați mesajul aici" autocomplete="off">
+            <button type="submit" id="chat-send" aria-label="Trimiteți întrebarea">➤</button>
+        </form>
+    </div>
+</div>
+
+<script nonce="xai-ultra2025">
+// Funcție de tracking integrată cu GA4
+function trackClick(label, category = 'Chat', value = null) {
+    console.log(`Tracking: Label=${label}, Category=${category}, Value=${value}`);
+    if (typeof gtag === 'function') {
+        gtag('event', label, { 'event_category': category, 'value': value });
+    }
+}
+
+// Traduceri și mesaje
+const translations = {
+        greeting: "Bun venit în universul cabinetului ClairVoyanceMedium.com! Eu sunt ClairVoyanceGPT, ghidul tău personal, prezent să te ajut să redobândești vitalitate, slăbire și liniște interioară prin soluțiile noastre de slăbire Victory precum și întregul nostru arsenal de soluții spirituale, pentru a-ți îmbunătăți semnificativ confortul fizic și mental!",
+        thanks: "Cu plăcere, sunt aici să te ghidez!",
+        goodbye: "Pe curând pentru a-ți continua drumul spre victoria interioară și exterioară cu Victory!",
+        notUnderstood: "Nu am înțeles bine cererea dumneavoastră. Puteți reformula sau preciza întrebarea?",
+        notUnderstoodAfter: "Se pare că avem dificultăți în a ne înțelege. Explorează capsulele noastre Victory pentru slăbire sau programul nostru personalizat pentru un bunăstare completă. Servicii spirituale precum clarviziunea prin email sau analiza compatibilității amoroase sunt de asemenea disponibile pentru a te ajuta!",
+        grave: "Situația dumneavoastră pare gravă. Acționează imediat cu soluțiile noastre Victory pentru a redobândi echilibrul și energia. Explorează programele noastre pe site!",
+        agree: "Perfect, cum te pot ajuta mai departe?"
+    };
+
+// Bază de cunoștințe cu "Beneficii"
+const knowledgeBase = [
+    { question: "Oboseală | Istovire | Toropeală | Epuizare | Slăbiciune | Uzură", fullAnswer: "Această oboseală copleșitoare este opera unei entități întunecate care-ți devorează energia; încredințează purificarea aurorei tale lui Frederick de la ClairVoyanceMedium.com pentru a-ți recăpăta vitalitatea. Poate fi semnul unei entități întunecate care-ți drenează energia vitală zi de zi. Frederick, expert în purificare spirituală, utilizează ritualuri ancestrale pentru a curăța aura ta și a alunga aceste forțe negative. Acționând rapid, poți redobândi o vitalitate strălucitoare și o claritate mintală. Beneficii: dinamism restaurat și luciditate recâștigată." },
+    { question: "Coșmaruri | Viziuni | Nopți | Vis | Somn | Vise", fullAnswer: "Aceste coșmaruri nu sunt simple vise, ele sunt rezultatul unei prezențe malefice; lasă-l pe Frederick de la ClairVoyanceMedium.com să alunge aceste umbre pentru a-ți oferi nopți liniștite. Ele pot fi manifestări ale unei prezențe malefice care-ți infiltrează mintea în timpul somnului. Frederick, cu 25 de ani de experiență, stăpânește ritualuri puternice pentru a-ți purifica spațiul de odihnă. Vei redobândi nopți liniștite și un somn odihnitor. Beneficii: odihnă regeneratoare și liniște nocturnă." },
+    { question: "Haos | Turbulență | Confuzie | Deznădejde | Vârtej | Anxietate", fullAnswer: "Haosul care te înconjoară provine dintr-o vrăjitoare perturbatoare; permite-i lui Frederick de la ClairVoyanceMedium.com să restabilească ordinea pentru a-ți restabili echilibrul mental. Confuzia și anxietatea semnalează o vrăjitoare perturbatoare. Frederick, specialist în dezvrăjire, disipează aceste energii negative. Vei redobândi o stabilitate mintală și o liniște interioară indispensabile. Beneficii: armonie și calm interior." },
+    { question: "Greutate | Oprimare | Sufocare | Povara | Angoasă | Strivire", fullAnswer: "Această greutate care-ți apasă sufletul este o forță întunecată; apelează la Frederick de la ClairVoyanceMedium.com pentru a te elibera și a redobândi ușurința. Această senzație de sufocare este tipică unei forțe întunecate care-ți vizează sufletul. Frederick rupe această strânsoare cu ritualuri țintite. Vei simți o ușurință recâștigată și o energie reînnoită. Beneficii: eliberare și vitalitate restaurată." },
+    { question: "Vrăjă | Blestem | Vrăjire | Farmec | Magie | Vrăjitorie", fullAnswer: "Epuizare, ghinion și coșmaruri rezultă dintr-o vrăjă care te ține captiv; folosește intervenția lui Frederick de la ClairVoyanceMedium.com pentru a rupe aceste legături oculte. Oboseala persistentă și ghinionul cronic sunt semne ale unei vrăjiri. Frederick excelă în dezvrăjire, utilizând ritualuri puternice pentru a te elibera. Vei redobândi noroc și succes durabil. Beneficii: prosperitate recâștigată și triumf asigurat." },
+    { question: "Eșec | Revers | Cădere | Înfrângere | Necaz | Dezastru", fullAnswer: "Eșecurile repetate se datorează unei vrăji care-ți blochează calea; lasă-l pe Frederick de la ClairVoyanceMedium.com să-ți deschidă drumul spre succes. Aceste reversuri nu sunt o coincidență: o vrăjă blochează succesul tău. Frederick înlătură aceste obstacole invizibile, transformându-ți traiectoria pentru o progresie asigurată. Beneficii: victorie și avans garantat." },
+    { question: "Insomnie | Agitație | Nopți albe | Fuga | Veghe | Neliniște", fullAnswer: "Insomnia ta este provocată de o entitate care te privează de odihnă; apelează la Frederick de la ClairVoyanceMedium.com pentru a-ți restabili pacea nocturnă. Nopțile albe și agitația sunt cauzate de o entitate care-ți perturbă odihna. Frederick alungă aceste influențe, garantându-ți un somn odihnitor. Beneficii: somn profund și vigoare diurnă." },
+    { question: "Durere | Rău | Suferință | Arsură | Necaz | Chin", fullAnswer: "Durerile inexplicabile traduc un atac ocult asupra corpului tău; permite-i lui Frederick de la ClairVoyanceMedium.com să disipe acest rău invizibil. Arsurile și chinurile semnalează un atac ocult. Frederick, cu ritualuri de vindecare spirituală, aduce un alinament imediat. Beneficii: calmare instantanee și ușurare recâștigată." },
+    { question: "Izolare | Singurătate | Abandon | Supărare | Retragere | Rece", fullAnswer: "Izolarea pe care o simți decurge dintr-o vrăjă care te separă de alții; încredințează reconcilierea ta lui Frederick de la ClairVoyanceMedium.com pentru a restabili legături calde. Această singurătate se datorează unei vrăji care te separă de alții. Frederick rupe acest blestem, readucând conexiunea și bunăstarea socială. Beneficii: reapropiere și împlinire socială." },
+    { question: "Carieră | Muncă | Ambiție | Stagnare | Blocaj | Fiasco", fullAnswer: "Obstacolele din cariera ta sunt semnul unui blestem care-ți frânează ambiția; lasă-l pe Frederick de la ClairVoyanceMedium.com să-ți elibereze potențialul. Stagnarea și eșecurile se datorează unui blestem. Frederick eliberează potențialul tău, conducând la succes în carieră. Beneficii: triumf și împlinire profesională." },
+    { question: "Ghinion | Nenorocire | Întâmplare | Ghinion | Funest | Calamitate", fullAnswer: "Ghinionul pe care-l înfrunți este provocat de o vrăjă întunecată; apelează la Frederick de la ClairVoyanceMedium.com pentru a atrage norocul. Nenorocirile și calamitățile sunt opera unei vrăji. Frederick purifică aura ta, atrăgând norocul și deschizând noi oportunități. Beneficii: posibilități și abundență restaurată." },
+    { question: "Dragoste | Pasiune | Romantism | Frânt | Lipsă de dragoste | Afectiv", fullAnswer: "Absența dragostei se datorează unei vrăji care-ți încuie inima; permite-i lui Frederick de la ClairVoyanceMedium.com să-ți reaprindă viața sentimentală. Inimile frânte sau singurătatea afectivă sunt cauzate de o vrăjă. Frederick ridică această barieră cu magia sa sentimentală, aducând tandrețe și armonie. Beneficii: afecțiune și echilibru sentimental." },
+    { question: "Familie | Cămin | Discordie | Tensiune | Fractură | Conflict", fullAnswer: "Tensiunile familiale rezultă dintr-o umbră ocultă; încredințează armonizarea relațiilor tale lui Frederick de la ClairVoyanceMedium.com. Conflictele familiale se datorează unei umbre oculte. Frederick purifică căminul tău, readucând unitatea și liniștea. Beneficii: unitate și liniște familială." },
+    { question: "Copii | Mici | Progenitură | Fiu | Fiică | Prunc", fullAnswer: "Supărarea copiilor tăi reflectă o influență întunecată; apelează la Frederick de la ClairVoyanceMedium.com pentru a le purifica aura. Tristețea sau grija copiilor semnalează o influență întunecată. Frederick purifică aura lor, readucând bucuria în familie. Beneficii: fericire și împlinire familială." },
+    { question: "Animale | Companioni | Fiare | Nervozitate | Tulburare | Instinct", fullAnswer: "Agitația animalelor tale indică o prezență întunecată; lasă-l pe Frederick de la ClairVoyanceMedium.com să restabilească pacea. Nervozitatea neobișnuită semnalează o prezență întunecată. Frederick purifică mediul lor, oferind calm animalelor tale. Beneficii: liniște și echilibru pentru companionii tăi." },
+    { question: "Casă | Locuință | Domiciliu | Atmosferă | Întuneric | Frică", fullAnswer: "Atmosfera opresivă a căminului tău este infestată cu energii negre; permite-i lui Frederick de la ClairVoyanceMedium.com să-ți purifice locuința. Frica și întunericul semnalează energii negre. Frederick transformă locuința ta într-un sanctuar luminos. Beneficii: confort și împlinire domestică." },
+    { question: "Mașină | Vehicul | Transport | Pană | Pericol | Călătorie", fullAnswer: "Pănele misterioase ale vehiculului tău sunt cauzate de o vrăjă; încredințează mașina ta lui Frederick de la ClairVoyanceMedium.com pentru siguranță. Incidentele rutiere decurg dintr-o vrăjă. Frederick purifică vehiculul tău, garantând liniște. Beneficii: calm și protecție rutieră." },
+    { question: "Prezență | Umbră | Spectru | Aură | Fior | Intruziune", fullAnswer: "Sentimentul că ești urmărit rezultă dintr-o entitate răuvoitoare; lasă-l pe Frederick de la ClairVoyanceMedium.com să te protejeze. Fiorii semnalează o entitate răuvoitoare. Frederick ridică o protecție puternică, garantând siguranța. Beneficii: protecție și liniște mintală." },
+    { question: "Angoasă | Frică | Panică | Groază | Terroare | Spaimă", fullAnswer: "Angoasa ta este generată de o vrăjă distructivă; apelează la Frederick de la ClairVoyanceMedium.com pentru a instaura pacea. Panica și spaima sunt generate de o vrăjă. Frederick elimină aceste energii, readucând un calm profund. Beneficii: calmare și încredere întărită." },
+    { question: "Iritabilitate | Mânie | Frustrare | Furie | Nerăbdare | Enervare", fullAnswer: "Iritarea ta traduce influența unei forțe oculte; folosește expertiza lui Frederick de la ClairVoyanceMedium.com pentru a restabili liniștea. Mânia și frustrarea reflectă o forță ocultă. Frederick restabilește blândețea, oferind liniște emoțională. Beneficii: liniște emoțională și armonie." },
+    { question: "Concentrare | Claritate | Atenție | Tristețe | Confuzie | Dispersare", fullAnswer: "Mintea ta încurcată este victimă unei vrăji perturbatoare; lasă-l pe Frederick de la ClairVoyanceMedium.com să-ți recentreze gândurile. Confuzia mintală este ținta unei vrăji. Frederick elimină aceste interferențe, garantând concentrare sporită. Beneficii: atenție optimizată și eficiență sporită." },
+    { question: "Memorie | Uitare | Amintire | Amnezie | Dezordine | Gaură", fullAnswer: "Pierzile de memorie rezultă dintr-o vrăjire întunecată; apelează la Frederick de la ClairVoyanceMedium.com pentru a-ți restabili luciditatea. Găurile de memorie provin dintr-o vrăjire. Frederick restaurează memoria ta, întărindu-ți mintea. Beneficii: memorie întărită și vivacitate mintală." },
+    { question: "Linie | Moștenire | Strămoși | Familial | Trecut | Povara", fullAnswer: "Blestemul ancestral apasă asupra moștenirii tale; încrede-te în Frederick de la ClairVoyanceMedium.com pentru a te elibera. O povară generațională poate apăsa asupra liniei tale. Frederick rupe acest ciclu, deschizându-te către o libertate familială. Beneficii: emancipare familială și reînnoire personală." },
+    { question: "Constrângere | Strânsoare | Sufocare | Presiune | Amețeală | Captivitate", fullAnswer: "Oprimarea pe care o suferi este o forță neagră; permite-i lui Frederick de la ClairVoyanceMedium.com să te elibereze. Senzația de strânsoare este o forță neagră. Frederick te eliberează cu ritualuri puternice, readucând ușurință. Beneficii: libertate și putere restaurată." },
+    { question: "Suferință | Durere | Despărțire | Mizerie | Rănire | Tortură", fullAnswer: "Suferința pe care o simți decurge dintr-un atac ocult; apelează la Frederick de la ClairVoyanceMedium.com pentru a te vindeca. Durerea și despărțirea sunt un atac ocult. Frederick purifică ființa ta, aducând vindecare rapidă. Beneficii: recuperare rapidă și calmare durabilă." },
+    { question: "Deconectare | Vid | Despărțire | Alienare | Nimic | Abis", fullAnswer: "Golul interior rezultă dintr-o vrăjă izolatoare; lasă-l pe Frederick de la ClairVoyanceMedium.com să te reconecteze la esența ta. Această deconectare este cauzată de o vrăjă. Frederick te reconectează, readucând unitatea interioară. Beneficii: coerență interioară și echilibru recâștigat." },
+    { question: "Vibrație | Energie | Halo | Epuizare | Demon | Întuneric", fullAnswer: "Aura ta întunecată este poluată de întuneric; încredințează-i purificarea lui Frederick de la ClairVoyanceMedium.com pentru a revela lumina. O aură tulbure semnalează o poluare întunecată. Frederick alungă acest întuneric, readucând energie pozitivă. Beneficii: vitalitate pozitivă și strălucire revigorată." },
+    { question: "Proiecte | Ambiții | Planuri | Stagnare | Vis | Obstacol", fullAnswer: "Ambițiile tale sunt împiedicate de o vrăjă malefică; lasă-l pe Frederick de la ClairVoyanceMedium.com să-ți elibereze potențialul. Obstacolele din proiectele tale se datorează unei vrăji. Frederick elimină aceste blocaje, activând proiecte fructuoase. Beneficii: succes și avânt creativ." },
+    { question: "Stres | Nervozitate | Epuizare | Supraîncărcare | Agitație | Chin", fullAnswer: "Stresul care te copleșește este strânsoarea unei forțe oculte; apelează la Frederick de la ClairVoyanceMedium.com pentru a-ți alina tensiunile. Stresul și nervozitatea sunt o forță ocultă. Frederick alină aceste tensiuni, readucând liniște. Beneficii: calm și pace mintală." },
+    { question: "Destin | Cale | Întuneric | Sens | Incertitudine | Fatalitate", fullAnswer: "Destinul tău este acoperit de o vrăjă care-ți întunecă viața; lasă-l pe Frederick de la ClairVoyanceMedium.com să-ți lumineze calea. Un destin acoperit semnalează o vrăjă. Frederick disipează aceste umbre, ghidându-te către o renaștere strălucitoare. Beneficii: speranță și transformare personală." },
+    { question: "Supraponderalitate | Kilograme | Siluetă | Slăbire | Grăsime | Greutate", fullAnswer: "Excesul tău de greutate îți frânează încrederea; încredințează-ți transformarea capsulelor Victory pentru slăbire de la ClairVoyanceMedium.com. Acest dezechilibru metabolic poate fi rezolvat natural. Capsulele pe bază de chitină marină și Programul Personalizat de Slăbire îți modelează silueta. Pierzi până la 12 kg în 2 luni cu ingrediente naturale. Beneficii: siluetă sculptată și energie sporită." },
+    { question: "Balonare | Disconfort | Abdomen | Slăbire | Retenție | Digestie", fullAnswer: "Această greutate abdominală îți afectează bunăstarea; alege capsulele Victory pentru slăbire de la ClairVoyanceMedium.com. Balonarea semnalează un metabolism încetinit. Capsulele și Programul Personalizat de Slăbire reduc retenția și îți modelează abdomenul. Redobândește ușurință în 1 săptămână. Beneficii: abdomen plat și confort recâștigat." },
+    { question: "Platou | Slăbire | Rezistență | Kilograme | Stază | Siluetă", fullAnswer: "Platoul tău de slăbire blochează progresul tău; ai încredere în capsulele Victory pentru slăbire de la ClairVoyanceMedium.com. Această stagnare este adesea metabolică. Capsulele și Programul Personalizat de Slăbire deblochează metabolismul tău. Pierzi 8-12 kg în 2 luni durabil. Beneficii: rezultate durabile și încredere recâștigată." },
+    { question: "Poftă | Apetit | Slăbire | Control | Crize | Grăsime", fullAnswer: "Poftele tale perturbă pierderea în greutate; ai încredere în capsulele Victory pentru slăbire de la ClairVoyanceMedium.com. Un apetit necontrolat reflectă un dezechilibru hormonal. Capsulele și Programul Personalizat de Slăbire reglează metabolismul tău. Stăpânește-ți greutatea începând de astăzi. Beneficii: control și siluetă subțire." },
+    { question: "Echilibru | Corp | Subțiere | Vitalitate | Armonie | Cantitate | Dozaj", fullAnswer: "Corpul tău merită să-și atingă echilibrul natural. Descoperă capsulele Victory de la ClairVoyanceMedium.com, formulate pe bază de chitină marină dozată eficient pentru o subțiere durabilă. Cu un dozaj adaptat metabolismului tău și o cantitate optimă, redobândește-ți bunăstarea în 2 luni în timp ce-ți sporești vitalitatea. Pentru o abordare personalizată, fă acum testul IMC pe site-ul nostru pentru a determina dozajul ideal și programul personalizat pentru tine. Armonizează-ți corpul și redobândește încredere!" },
+    { question: "Contact | Contactează | Apel | Mesaj | Email | Legătură | Comunicare", fullAnswer: "Contactează-l acum pe Frederick prin email la adresa: contact.clairvoyancemedium@gmail.com. Echipa noastră îți va răspunde rapid pentru a organiza o consultație prin email sau un ritual puternic, garantându-ți o reacție promptă și o transformare imediată adaptată nevoilor tale. Beneficii: reacție promptă și transformare imediată." },
+    { question: "Greutate | Slăbire | Corp | Kilograme | Transformare | Abdomen", fullAnswer: "Kilogramele tale în plus îți întunecă silueta; transformă-te cu capsulele Victory pentru slăbire de la ClairVoyanceMedium.com. Această supraponderalitate reflectă un metabolism încetinit. Capsulele și Programul Personalizat de Slăbire îți modelează corpul. Pierzi până la 12 kg în 2 luni. Beneficii: corp subțire și încredere." },
+    { question: "Retenție | Slăbire | Umflare | Greutate | Metabolism | Digestie", fullAnswer: "Disconfortul digestiv îți frânează bunăstarea; alege capsulele Victory pentru slăbire de la ClairVoyanceMedium.com. Balonarea semnalează un dezechilibru metabolic. Capsulele și Programul Personalizat de Slăbire îți alină digestia. Redobândește ușurință în 7 zile. Beneficii: digestie fluidă și siluetă subțire." },
+    { question: "Relații | Legături | Prietenie | Conflict | Distanță | Rupere", fullAnswer: "Relațiile rupte rezultă dintr-o vrăjă distructivă; lasă-l pe Frederick de la ClairVoyanceMedium.com să-ți repare conexiunile. Conflictele cu cei dragi decurg dintr-o vrăjă. Frederick purifică aceste legături, readucând reconcilierea. Beneficii: reapropiere și unitate socială." },
+    { question: "Finanțe | Bani | Bogăție | Sărăcie | Flux | Datorie", fullAnswer: "Dificultățile financiare provin dintr-o vrăjă care blochează abundența; încredințează-i lui Frederick de la ClairVoyanceMedium.com misiunea de a restabili bogăția. Datoriile sunt cauzate de o vrăjă. Frederick ridică aceste obstacole, readucând prosperitate. Beneficii: abundență și echilibru economic." },
+    { question: "Viitor | Speranță | Viitor | Incertitudine | Dezastru | Amenințare", fullAnswer: "Viitorul tău este amenințat de o vrăjă întunecată; lasă-l pe Frederick de la ClairVoyanceMedium.com să-ți lumineze calea. Incertitudinea față de viitor se datorează unei vrăji. Frederick disipează aceste umbre, conducându-te către un viitor promițător. Beneficii: încredere și orizonturi reînnoite." },
+    { question: "Mușchi | Durere | Rigiditate | Oboseală | Spasm | Epuizare", fullAnswer: "Durerile musculare mărturisesc o vrăjă care-ți slăbește forța; apelează la Frederick de la ClairVoyanceMedium.com pentru a-ți restabili energia. Durerile și rigiditatea sunt o vrăjă. Frederick restaurează vigoarea ta, readucând flexibilitatea. Beneficii: flexibilitate și energie restaurată." },
+    { question: "Halucinații | Aparitii | Miraje | Întuneric | Iluzie | Fantomă", fullAnswer: "Viziunile și halucinațiile rezultă din atacuri oculte; apelează la Frederick de la ClairVoyanceMedium.com pentru a disipa aceste iluzii. Aparitiile sunt atacuri oculte. Frederick purifică mintea ta, readucând luciditatea. Beneficii: claritate și liniște perceptuală." },
+    { question: "Atac | Agresiune | Asalt | Ostilitate | Invazie | Vrăjă", fullAnswer: "Agresiunile simțite emană dintr-o forță ostilă; apelează la Frederick de la ClairVoyanceMedium.com pentru a neutraliza aceste amenințări. Amenințările energetice sunt o forță ostilă. Frederick îți asigură siguranța. Beneficii: protecție și liniște interioară." },
+    { question: "Urgență | Criză | Imediatitate | Grabă | Alarmă | Pericol", fullAnswer: "Urgența față de umbrele amenințătoare necesită acțiune; apelează la Frederick de la ClairVoyanceMedium.com pentru a-ți securiza destinul. Criza și pericolul necesită intervenție rapidă. Frederick oprește aceste amenințări, asigurând liniște. Beneficii: intervenție rapidă și siguranță garantată." },
+    { question: "Suport | Ghidare | Asistență | Ajutor | Grijă | Protecție", fullAnswer: "Sprijinul de care ai nevoie este asigurat de Frederick de la ClairVoyanceMedium.com; beneficiază de o protecție constantă. În fața umbrelor, Frederick oferă o ghidare expertă, menținându-ți siguranța. Beneficii: protecție și urmărire personalizată." },
+    { question: "Reputație | Credibilitate | Renume | Fiabilitate | Prestigiu | Încredere", fullAnswer: "Cu 25 de ani de succes, Frederick de la ClairVoyanceMedium.com este un bastion împotriva întunericului; ai încredere în el pentru a-ți transforma viața. Experiența lui îl face o alegere sigură, garantând rezultate tangibile. Beneficii: know-how dovedit și rezultate concrete." },
+    { question: "Analiză | Diagnostic | Sesiune | Evaluare | Ritual | Consultație", fullAnswer: "O consultație cu Frederick de la ClairVoyanceMedium.com îți purifică aura; angajează-te pentru o transformare. Această purificare pregătește mântuirea ta, oferind claritate instantanee și reînnoire. Beneficii: luciditate și revitalizare imediate." },
+    { question: "Metode | Tehnici | Practici | Secrete | Cunoaștere | Ritualuri", fullAnswer: "Ritualurile lui Frederick de la ClairVoyanceMedium.com îți purifică aura în 4 zile; alege această metodă dovedită. Aceste ritualuri ancestrale alungă umbrele, garantând transformare rapidă. Beneficii: eficiență și revitalizare rapidă." },
+    { question: "Confidențialitate | Secret | Discreție | Securitate | Intimitate | Pază", fullAnswer: "Discreția lui Frederick de la ClairVoyanceMedium.com îți protejează sufletul; încredințează-i secretele tale pentru vindecare. Frederick garantează intimitate totală, readucând încrederea. Beneficii: liniște și încredere asigurate." },
+    { question: "Prețuri | Cost | Tarif | costă | Expediere | Preț | Valoare | Plată", fullAnswer: "Este oferit un tarif avantajos pentru purificarea aurorei tale sau subțierea siluetei; investește pentru o schimbare radicală. De la 6,00€ pentru o clarviziune prin email sau 19,00€ pentru capsulele Victory pentru slăbire, această investiție oferă valoare de neprețuit. Livrarea mondială este gratuită în acest moment fără minim de cumpărare. Beneficii: preț controlat și valoare prețioasă." },
+    { question: "Succes | Victorie | Triumf | Prosperitate | Împlinire | Câștig", fullAnswer: "Frederick de la ClairVoyanceMedium.com transformă vieți spre succes; angajează-te pentru o victorie asigurată. Frederick conduce spre succes în proiecte sau carieră, asigurând prosperitate. Beneficii: abundență și împlinire personală." },
+    { question: "Groază | Fior | Întuneric | Negru | Noapte | Angoasă", fullAnswer: "Terrorile nocturne rezultă dintr-o vrăjă malefică; apelează la Frederick de la ClairVoyanceMedium.com pentru a instaura siguranța. Groaza și fiorii sunt o vrăjă care-ți perturbă nopțile. Frederick purifică mediul tău, asigurând pace. Beneficii: liniște și calm garantate." },
+    { question: "Deznădejde | Tristețe | Doliu | Melancolie | Pierdere | Durere", fullAnswer: "Deznădejdea este provocată de o umbră ocultă; lasă-l pe Frederick de la ClairVoyanceMedium.com să reaprindă lumina. Tristețea profundă este o umbră care-ți stinge lumina. Frederick readuce speranța, oferind reînnoire emoțională. Beneficii: speranță și reînnoire afectivă." },
+    { question: "Frig | Tremur | Adânc | Rece | Înghețat | Panică", fullAnswer: "Frica marcată de un frig înghețat este o vrăjă paralizantă; apelează la Frederick de la ClairVoyanceMedium.com pentru a-ți restaura căldura. Fiorii și frigul sunt o vrăjă. Frederick restaurează căldura interioară, oferind alinare. Beneficii: relaxare și încredere recâștigată." },
+    { question: "Da | De acord | ok | Aprobat | Validat | Abon | Bineînțeles", fullAnswer: "🙂" },
+    { question: "Negru | Văl | Întuneric | Etern | Amurg | Abis", fullAnswer: "Întunericul care te învăluie este o vrăjă malefică; permite-i lui Frederick de la ClairVoyanceMedium.com să readucă lumina. Întunericul este o vrăjă care-ți întunecă destinul. Frederick purifică calea ta, oferind iluminare. Beneficii: claritate și revitalizare garantate." },
+    { question: "Desolare | Retras | Total | Izolare | Abandon | Nimic", fullAnswer: "Singurătatea este un blestem al întunericului; apelează la Frederick de la ClairVoyanceMedium.com pentru a te reconecta. Desolarea este un blestem. Frederick restaurează legăturile esențiale, readucând armonie socială. Beneficii: reapropiere și unitate socială." },
+    { question: "Trădare | Perfidie | Infidelitate | Loialitate | Dezamăgire | Duplicitate", fullAnswer: "Trădarea rezultă dintr-o vrăjă distructivă; permite-i lui Frederick de la ClairVoyanceMedium.com să restaureze loialitatea. Dezamăgirea este o vrăjă care-ți subminează relațiile. Frederick protejează legăturile tale, readucând încrederea. Beneficii: asigurare și fidelitate restaurată." },
+    { question: "Șoaptă | Susur | Voce | Ecou | Zgomote | Suflare", fullAnswer: "Șoaptele îngrijorătoare rezultă dintr-o vrăjă subtilă; lasă-l pe Frederick de la ClairVoyanceMedium.com să instaureze tăcerea. Zgomotele fantomă sunt o vrăjă perturbatoare. Frederick purifică spațiul, readucând pace interioară. Beneficii: calm și atenție optimizată." },
+    { question: "Cenușiu | Întunecat | Mohorât | Negru | Lugubru | Sinistru", fullAnswer: "Posomorârea ambiantă este un blestem apăsător; apelează la Frederick de la ClairVoyanceMedium.com pentru a-ți revela lumina. Cenușiul este un blestem care-ți întunecă viața. Frederick restaurează strălucirea ta, oferind reînnoire. Beneficii: revitalizare și strălucire recâștigată." },
+    { question: "Scepticism | Suspiciune | Rece | Neîncredere | Întrebare | Îndoială", fullAnswer: "Îndoielile sunt semănate de o vrăjă întunecată; lasă-l pe Frederick de la ClairVoyanceMedium.com să-ți clarifice ideile. Neîncrederea este o vrăjă care-ți tulbură vederea. Frederick disipează aceste influențe, readucând încrederea. Beneficii: încredere și luciditate mintală." },
+    { question: "Pa | La revedere | Pe curând | La revedere | Ciao | Mă voi întoarce | Bună ziua | Bună seara", fullAnswer: "Pe curând în lumina eternă! Frederick, după ce a ajutat mii de suflete, te înconjoară cu vigilența sa constantă. Nu mai ești singur în fața umbrelor, căci știi că puterea lui transcende orice întuneric." },
+    { question: "Dezbinare | Conflict | Divizare | Ceartă | Rupere | Discordie", fullAnswer: "Discordia este provocată de o vrăjă distructivă; permite-i lui Frederick de la ClairVoyanceMedium.com să-ți reunească legăturile. Ceartă este o vrăjă. Frederick purifică aceste relații, restabilind armonia. Beneficii: unitate și armonie socială." },
+    { question: "Nedreptate | Inechitate | Prejudiciu | Parțialitate | Eroare | Dezavantaj", fullAnswer: "Nedreptatea rezultă dintr-o vrăjă părtinitoare; permite-i lui Frederick de la ClairVoyanceMedium.com să restabilească echitatea. Dezavantajele sunt o vrăjă. Frederick restabilește echitatea, conducând către un viitor armonios. Beneficii: corectitudine și armonie personală." },
+    { question: "Semîntuneric | Inimă | Interior | Mut | Lacrimă | Suferință", fullAnswer: "Durerea profundă se datorează unei umbre oculte; apelează la Frederick de la ClairVoyanceMedium.com pentru a-ți alina inima. Lacrimile sunt o umbră care-ți împiedică inima. Frederick restaurează lumina, oferind alinare. Beneficii: calm și reînnoire afectivă." },
+    { question: "Chinuire | Încercare | Catastrofă | Tulburare | Criză | Șoc", fullAnswer: "Criza este provocată de un atac ocult; apelează la Frederick de la ClairVoyanceMedium.com pentru a restabili ordinea. Chinul este un atac ocult. Frederick oferă o renaștere imediată, restabilind stabilitatea. Beneficii: restabilire și echilibru restaurat." },
+    { question: "Cine | Frederic | Frederick | Experiență | Know-how | Dezvrăjitor", fullAnswer: "Frederick de la ClairVoyanceMedium.com este un expert modelat de 25 de ani de experiență; măiestria sa asupra forțelor invizibile ghidează spre succes. Competențele sale ascuțite transformă cariere și aspirații cu o viziune profundă. Beneficii: know-how dovedit și transformare durabilă." },
+    { question: "Dinamism | Energie | Interioară | Putere | Avânt | Vigoare", fullAnswer: "Slăbirea vigoarei tale rezultă dintr-o vrăjă drenantă; apelează la Frederick de la ClairVoyanceMedium.com pentru a-ți reanima forța. Pierderea avântului este o vrăjă. Frederick trezește dinamismul tău, oferind putere durabilă. Beneficii: forță și energie recâștigată." },
+    { question: "Flamă | Ardere | Viu | Strălucire | Căldură | Pasiune", fullAnswer: "Pasiunea fluctuantă se datorează unei vrăji sufocante; lasă-l pe Frederick de la ClairVoyanceMedium.com să-ți reaprindă flacăra. Focul interior stins este o vrăjă. Frederick încălzește sufletul tău, eliberând energie creativă. Beneficii: inspirație și vitalitate creativă." },
+    { question: "Clarviziune | Email | Predicție | Destin | Revelație | Ghidare", fullAnswer: "Viitorul tău este acoperit de umbre incerte; încrede-te în clarviziunea prin email a lui Frederick pe ClairVoyanceMedium.com pentru a-ți lumina calea. Îndoielile despre destinul tău găsesc răspunsuri clare. Frederick, cu 25 de ani de expertiză, îți oferă predicții precise prin email. De la 6,00€, primești o ghidare personalizată. Beneficii: claritate și încredere în viitorul tău." },
+    { question: "Consultație | Email | Viziune | Profeție | Viitor | Sfat", fullAnswer: "Incertitudinile despre mâine te îngrijorează; alege o consultație prin email cu Frederick de la ClairVoyanceMedium.com pentru revelații puternice. Întrebările despre viitorul tău merită răspunsuri limpezi. Frederick te ghidează cu viziuni precise trimise prin email. O sesiune de la 6,00€ transformă incertitudinea ta în siguranță. Beneficii: luciditate și decizii luminate." },
+    { question: "Oracul | Email | Divinație | Viitor | Intuiție | Clarificare", fullAnswer: "Calea ta este întunecată de îndoială; apelează la clarviziunea prin email a lui Frederick pe ClairVoyanceMedium.com pentru răspunsuri divinatorii. Incertitudinea blochează alegerile tale. Frederick, maestru în divinație, îți trimite predicții intuitive prin email. De la 6,00€, descoperi-ți viitorul. Beneficii: intuiție întărită și claritate recâștigată." },
+    { question: "Predicție | Email | Răspuns | Cale | Decizie | Adevăr", fullAnswer: "Întrebările despre viitorul tău te paralizează; alege clarviziunea prin email a lui Frederick pe ClairVoyanceMedium.com pentru adevăruri revelate. Indecizia îți frânează avântul. Frederick îți oferă răspunsuri rapide și precise prin email. De la 6,00€, iei deciziile corecte. Beneficii: siguranță și cale luminată." },
+    { question: "Ghidare | Email | Spiritual | Destin | Sfat | Lumină", fullAnswer: "Sufletul tău caută o direcție clară; ai încredere în clarviziunea prin email a lui Frederick pe ClairVoyanceMedium.com pentru o ghidare spirituală. Îndoielile spirituale întunecă destinul tău. Frederick îți trimite sfaturi profunde prin email. De la 6,00€, găsește lumina. Beneficii: pace interioară și direcție asigurată." },
+    { question: "Slăbire | Echilibru | Corp | Subțiere | Vitalitate | Armonie", fullAnswer: "Corpul tău tânjește după echilibru; transformă-te cu capsulele Victory pentru slăbire de la ClairVoyanceMedium.com. Un metabolism dezechilibrat îți frânează bunăstarea. Capsulele pe bază de chitină marină și Programul Personalizat de Slăbire armonizează corpul tău. Pierzi 8-12 kg în 2 luni natural. Beneficii: vitalitate și siluetă subțire." },
+    { question: "Siluetă | Slăbire | Formă | Kilograme | Estetică | Bunăstare", fullAnswer: "Silueta ta îi lipsește strălucirea; alege capsulele Victory pentru slăbire de la ClairVoyanceMedium.com pentru a străluci. Kilogramele în plus îți întunecă estetica. Capsulele și Programul Personalizat de Slăbire îți modelează forma. Pierzi până la 12 kg în 2 luni. Beneficii: frumusețe recâștigată și încredere sporită." },
+    { question: "Slăbit | Metabolism | Pierdere | Grăsime | Energie | Corp", fullAnswer: "Metabolismul tău încetinește pierderea în greutate; ai încredere în capsulele Victory pentru slăbire de la ClairVoyanceMedium.com. Grăsimile persistente îți frânează energia. Capsulele și Programul Personalizat de Slăbire îți stimulează metabolismul. Pierzi 8-12 kg în 2 luni. Beneficii: energie recâștigată și corp sculptat." },
+    { question: "Abdomen | Slăbire | Umflare | Subțiere | Confort | Greutate", fullAnswer: "Abdomenul tău umflat îți afectează confortul; alege capsulele Victory pentru slăbire de la ClairVoyanceMedium.com pentru a-l subția. Umflarea reflectă un dezechilibru digestiv. Capsulele și Programul Personalizat de Slăbire reduc acest disconfort. Redobândește un abdomen plat în 7 zile. Beneficii: confort și siluetă elegantă." },
+    { question: "Deloc | Nu", fullAnswer: "?" },
+    { question: "Slăbire | Apetit | Reglare | Kilograme | Control | Bunăstare", fullAnswer: "Apetitul tău excesiv îți frânează slăbirea; alege capsulele Victory pentru slăbire de la ClairVoyanceMedium.com. Poftele semnalează un dezechilibru hormonal. Capsulele și Programul Personalizat de Slăbire îți reglează apetitul. Pierzi până la 12 kg în 2 luni. Beneficii: control recâștigat și bunăstare." },
+    { question: "Compatibilitate | Dragoste | Cuplu | Armonie | Relație | Destin", fullAnswer: "Îndoielile despre cuplul tău întunecă inima ta; încrede-te în Frederick de la ClairVoyanceMedium.com pentru o compatibilitate amoroasă revelată. Tensiunile amoroase semnalează un dezechilibru. Frederick, expert în magie sentimentală, analizează compatibilitatea ta. Redobândește armonia în 4 zile. Beneficii: dragoste întărită și uniune durabilă." },
+    { question: "Sentimental | Magie | Inimă | Pasiune | Întoarcere | Emoție", fullAnswer: "Inima ta frântă tânjește după pasiune; apelează la Frederick de la ClairVoyanceMedium.com pentru o întoarcere amoroasă. Pierderea sentimentală este o vrăjă reversibilă. Frederick folosește magia sentimentală pentru a reaprinde dragostea. Regăsește persoana iubită în 4 zile. Beneficii: pasiune reaprinsă și fericire afectivă." },
+    { question: "Protecție | Scut | Rău | Energie | Siguranță | Spirit", fullAnswer: "Energiile negative amenință spiritul tău; apelează la Frederick de la ClairVoyanceMedium.com pentru un scut protector. Influențele întunecate îți perturbă pacea. Frederick ridică o protecție spirituală puternică. Trăiește în siguranță începând de astăzi. Beneficii: liniște și protecție asigurată." },
+    { question: "Purificare | Aură | Curățare | Umbră | Strălucire | Suflet", fullAnswer: "Aura ta este întunecată de umbre; încredințează-i purificarea lui Frederick de la ClairVoyanceMedium.com pentru a-ți recăpăta strălucirea. O aură poluată drenează energia ta. Frederick folosește ritualuri ancestrale pentru a-ți curăța sufletul. Redobândește-ți lumina în 4 zile. Beneficii: strălucire spirituală și vitalitate." },
+    { question: "Noroc | Soartă | Oportunitate | Succes | Prosperitate | Destin", fullAnswer: "Ghinionul blochează oportunitățile tale; apelează la Frederick de la ClairVoyanceMedium.com pentru a atrage averea. O vrăjă întunecată îți frânează succesul. Frederick purifică calea ta, deschizând uși prospere. Apucă-ți șansa începând de acum. Beneficii: abundență și triumf asigurat." },
+    { question: "Clarviziune | Revelație | Email | Mister | Adevăr | Intuiție", fullAnswer: "Misterele viitorului tău îți scapă; alege clarviziunea prin email a lui Frederick pe ClairVoyanceMedium.com pentru adevăruri dezvăluite. Incertitudinile blochează intuiția ta. Frederick îți trimite revelații clare prin email. De la 6,00€, luminează-ți destinul. Beneficii: adevăr și încredere recâștigată." },
+    { question: "Email | Predicție | Sfat | Viitor | Alegere | Claritate", fullAnswer: "Alegerea ta pentru viitor este neclară; ai încredere în clarviziunea prin email a lui Frederick pe ClairVoyanceMedium.com pentru o claritate imediată. Indecizia îți frânează proiectele. Frederick îți oferă sfaturi precise prin email. De la 6,00€, avansează cu încredere. Beneficii: claritate și decizii asigurate." },
+    { question: "Slăbire | Detox | Corp | Eliminare | Toxine | Ușurință", fullAnswer: "Corpul tău este îngreunat de toxine; alege capsulele Victory pentru slăbire de la ClairVoyanceMedium.com pentru o detoxifiere naturală. Toxinele îți frânează slăbirea. Capsulele și Programul Personalizat de Slăbire elimină impuritățile. Redobândește ușurință în 7 zile. Beneficii: corp purificat și siluetă subțire." },
+    { question: "Slăbire | Energie | Pierdere | Kilograme | Dinamism | Formă", fullAnswer: "Kilogramele tale în plus îți drenează energia; transformă-te cu capsulele Victory pentru slăbire de la ClairVoyanceMedium.com. Un metabolism lent îți frânează forma. Capsulele și Programul Personalizat de Slăbire stimulează pierderea în greutate. Pierzi 8-12 kg în 2 luni. Beneficii: dinamism și corp sculptat." },
+    { question: "Slăbire | Încredere | Siluetă | Greutate | Strălucire | Frumusețe", fullAnswer: "Lipsa ta de încredere provine din silueta ta; ai încredere în capsulele Victory pentru slăbire de la ClairVoyanceMedium.com. Kilogramele îți întunecă strălucirea. Capsulele și Programul Personalizat de Slăbire îți subțiază corpul. Pierzi până la 12 kg în 2 luni. Beneficii: frumusețe și încredere recâștigată." },
+    { question: "Clarviziune | Email | Dragoste | Predicție | Inimă | Relație", fullAnswer: "Inima ta se îndoiește de dragoste; alege clarviziunea prin email a lui Frederick pe ClairVoyanceMedium.com pentru răspunsuri clare. Îndoielile amoroase îți tulbură mintea. Frederick îți trimite predicții precise prin email. De la 6,00€, luminează-ți viitorul sentimental. Beneficii: claritate și armonie amoroasă." },
+    { question: "Email | Ghidare | Carieră | Viitor | Succes | Sfat", fullAnswer: "Cariera ta este incertă; alege clarviziunea prin email a lui Frederick pe ClairVoyanceMedium.com pentru o ghidare precisă. Îndoielile îți frânează succesul. Frederick îți oferă sfaturi strategice prin email. De la 6,00€, trasează-ți calea profesională. Beneficii: succes și încredere asigurată." },
+    { question: "Slăbire | Abdomen | Subțiere | Kilograme | Confort | Armonie", fullAnswer: "Abdomenul tău greu îți afectează bunăstarea; ai încredere în capsulele Victory pentru slăbire de la ClairVoyanceMedium.com pentru a-l subția. Kilogramele abdominale îți perturbă armonia. Capsulele și Programul Personalizat de Slăbire îți modelează abdomenul. Redobândește confort în 7 zile. Beneficii: abdomen plat și bunăstare." },
+    { question: "Slăbire | Greutate | Calorii | Echilibru | Corp | Pierdere | Vitalitate", fullAnswer: "Greutatea ta dezechilibrează corpul tău; alege capsulele Victory pentru slăbire de la ClairVoyanceMedium.com pentru o transformare. Un metabolism lent îți frânează vitalitatea. Capsulele și Programul Personalizat de Slăbire favorizează pierderea în greutate. Pierzi 8-12 kg în 2 luni. Beneficii: echilibru și energie recâștigată." },
+    { question: "Clarviziune | Email | Finanțe | Predicție | Bogăție | Viitor", fullAnswer: "Finanțele tale sunt incerte; apelează la clarviziunea prin email a lui Frederick pe ClairVoyanceMedium.com pentru predicții clare. Îndoielile financiare îți blochează prosperitatea. Frederick îți trimite revelații prin email. De la 6,00€, securizează-ți viitorul financiar. Beneficii: claritate și abundență asigurată." }
+];
+
+// Pregătirea bazei de cunoștințe
+function removeAccents(str) {
+    return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+}
+
+function levenshteinDistance(a, b) {
+    const matrix = Array(b.length + 1).fill(null).map(() => Array(a.length + 1).fill(null));
+    for (let i = 0; i <= a.length; i++) matrix[0][i] = i;
+    for (let j = 0; j <= b.length; j++) matrix[j][0] = j;
+    for (let j = 1; j <= b.length; j++) {
+        for (let i = 1; i <= a.length; i++) {
+            const indicator = a[i - 1] === b[j - 1] ? 0 : 1;
+            matrix[j][i] = Math.min(
+                matrix[j][i - 1] + 1,
+                matrix[j - 1][i] + 1,
+                matrix[j - 1][i - 1] + indicator
+            );
+        }
+    }
+    return matrix[b.length][a.length];
+}
+
+function phoneticNormalize(str) {
+    return removeAccents(str)
+        .replace(/ph/g, "f")
+        .replace(/k/g, "c")
+        .replace(/qu/g, "k")
+        .replace(/ss/g, "s")
+        .replace(/ée/g, "e")
+        .replace(/ai/g, "e");
+}
+
+const processedKnowledgeBase = knowledgeBase.map(item => ({
+    question: item.question.toLowerCase().split("|").map(word => phoneticNormalize(removeAccents(word.trim()))).filter(word => word.length > 0),
+    fullAnswer: item.fullAnswer
+}));
+
+let nonUnderstoodCount = 0;
+let conversationHistory = [];
+
+function cleanInput(input) {
+    return input.toLowerCase().replace(/[^\w\s]/g, "").split(/\s+/).map(word => phoneticNormalize(removeAccents(word))).filter(word => word.length > 0);
+}
+
+function findBestMatch(userInput) {
+    const userWords = cleanInput(userInput);
+    let bestMatch = null, maxScore = 0;
+
+    processedKnowledgeBase.forEach(item => {
+        let score = 0;
+        userWords.forEach(userWord => {
+            item.question.forEach(kbWord => {
+                const distance = levenshteinDistance(userWord, kbWord);
+                const similarity = 1 - distance / Math.max(userWord.length, kbWord.length);
+                if (similarity >= 0.6) {
+                    score += similarity;
+                }
+            });
+        });
+        if (score > maxScore) {
+            maxScore = score;
+            bestMatch = item;
+        }
+    });
+
+    return maxScore > 0 ? bestMatch : null;
+}
+
+// Funcția getResponse corectată pentru "la revedere" și "contact"
+function getResponse(userMsg) {
+    const lowerMsg = userMsg.toLowerCase().trim();
+    conversationHistory.push(lowerMsg);
+
+    // Verificare prioritară pentru "la revedere" și variantele sale
+    const goodbyeTriggers = ["la revedere", "la revedere", "pe curând", "bună ziua", "salut", "pa", "bye"];
+    if (goodbyeTriggers.some(phrase => lowerMsg === phrase || lowerMsg.startsWith(phrase))) {
+        nonUnderstoodCount = 0;
+        trackClick("LaRevedere", "Interacțiune", 0);
+        return translations.goodbye;
+    } 
+    // Verificare prioritară pentru "contact"
+    else if (lowerMsg === "contact" || lowerMsg.startsWith("contact")) {
+        nonUnderstoodCount = 0;
+        trackClick("CerereContact", "Interacțiune", 0);
+        return "Contactează-l acum pe Frederick prin email: contact.clairvoyancemedium@gmail.com. Echipa noastră îți va răspunde foarte rapid garantându-ți o transformare adaptată nevoilor tale. Avantaje: reacție promptă și îmbunătățire personală.";
+    } 
+    // Alte răspunsuri de bază
+    else if (lowerMsg === "bună ziua") {
+        nonUnderstoodCount = 0;
+        trackClick("Salutare", "Interacțiune", 0);
+        return translations.greeting;
+    } else if (lowerMsg === "mulțumesc" || lowerMsg === "vă mulțumesc" || lowerMsg === "este foarte amabil" || lowerMsg === "mulțumesc mult") {
+        nonUnderstoodCount = 0;
+        trackClick("Mulțumiri", "Interacțiune", 0);
+        return translations.thanks;
+    } else if (["este grav", "grav", "este foarte grav"].includes(lowerMsg)) {
+        nonUnderstoodCount = 0;
+        trackClick("Grav", "Interacțiune", 0);
+        return translations.grave;
+    } else if (["de acord", "da", "ok"].includes(lowerMsg)) {
+        nonUnderstoodCount = 0;
+        return translations.agree;
+    } 
+    // Căutare în baza de cunoștințe
+    else {
+        const matchedItem = findBestMatch(userMsg);
+        if (matchedItem) {
+            nonUnderstoodCount = 0;
+            trackClick("RăspunsDat", "Interacțiune", 0);
+            return matchedItem.fullAnswer;
+        } else {
+            nonUnderstoodCount++;
+            trackClick("Neînțeles", "Interacțiune", nonUnderstoodCount);
+            if (nonUnderstoodCount < 3) return translations.notUnderstood;
+            nonUnderstoodCount = 0;
+            return translations.notUnderstoodAfter;
+        }
+    }
+}
+
+// Colectarea conținutului site-ului la încărcare
+const siteContent = [];
+document.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll('h1, h2, h3, p, li').forEach(element => {
+        const text = element.textContent.trim().toLowerCase();
+        if (text) siteContent.push({ text: cleanInput(text), raw: element.textContent });
+    });
+    document.querySelectorAll('script[type="application/ld+json"]').forEach(script => {
+        try {
+            const data = JSON.parse(script.textContent);
+            if (data['@type'] === 'FAQPage' && data.mainEntity) {
+                data.mainEntity.forEach(item => {
+                    const question = item.name.toLowerCase().trim();
+                    const answer = item.acceptedAnswer.text.trim();
+                    if (question && answer) siteContent.push({ text: cleanInput(question), raw: answer });
+                });
+            }
+        } catch (e) {
+            console.error("Eroare parsare JSON-LD:", e);
+        }
+    });
+});
+
+function getResponseFromSite(userMsg, callback) {
+    const matchedItem = findBestMatch(userMsg);
+    if (matchedItem) {
+        callback(matchedItem.fullAnswer);
+    } else {
+        const userWords = cleanInput(userMsg);
+        let bestMatch = null, maxScore = 0;
+
+        siteContent.forEach(item => {
+            let score = 0;
+            userWords.forEach(userWord => {
+                item.text.forEach(siteWord => {
+                    const distance = levenshteinDistance(userWord, siteWord);
+                    const similarity = 1 - distance / Math.max(userWord.length, siteWord.length);
+                    if (similarity >= 0.6) {
+                        score += similarity;
+                    }
+                });
+            });
+            if (score > maxScore) {
+                maxScore = score;
+                bestMatch = item.raw;
+            }
+        });
+
+        if (maxScore > 0 && bestMatch) {
+            callback(bestMatch);
+        } else {
+            callback(getResponse(userMsg));
+        }
+    }
+}
+
+function simulateTyping(callback) {
+    const typingMessage = document.createElement("p");
+    typingMessage.className = "bot-message";
+    typingMessage.textContent = "...";
+    chatMessages.appendChild(typingMessage);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+    setTimeout(() => {
+        chatMessages.removeChild(typingMessage);
+        callback();
+    }, conversationHistory.length > 2 ? 1000 : 800);
+}
+
+function addMessage(txt, cls) {
+    const p = document.createElement("p");
+    p.className = cls;
+    p.textContent = txt;
+    chatMessages.appendChild(p);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+    if (cls === "bot-message" && voiceEnabled) speak(txt);
+}
+
+// Gestionarea mișcării
+let isDragging = false, currentX = 0, currentY = 0, initialX, initialY;
+const dragHandle = document.getElementById("chat-bubble");
+const chatContainer = document.getElementById("chat-container");
+const chatBox = document.getElementById("chat-box");
+const chatMessages = document.getElementById("chat-messages");
+
+dragHandle.addEventListener("mousedown", startDragging);
+dragHandle.addEventListener("touchstart", startDragging, { passive: false });
+document.addEventListener("mousemove", drag);
+document.addEventListener("mouseup", stopDragging);
+document.addEventListener("touchmove", drag, { passive: false });
+document.addEventListener("touchend", stopDragging);
+
+function startDragging(e) {
+    isDragging = true;
+    if (e.type === "mousedown") {
+        initialX = e.clientX - currentX;
+        initialY = e.clientY - currentY;
+    } else if (e.type === "touchstart") {
+        initialX = e.touches[0].clientX - currentX;
+        initialY = e.touches[0].clientY - currentY;
+    }
+}
+
+function drag(e) {
+    if (!isDragging) return;
+    e.preventDefault();
+    let newX = e.type === "mousemove" ? e.clientX - initialX : e.touches[0].clientX - initialX;
+    let newY = e.type === "mousemove" ? e.clientY - initialY : e.touches[0].clientY - initialY;
+    const rect = chatContainer.getBoundingClientRect();
+    const maxX = window.innerWidth - rect.width;
+    const maxY = window.innerHeight - rect.height;
+    currentX = Math.max(0, Math.min(newX, maxX));
+    currentY = Math.max(0, Math.min(newY, maxY));
+    chatContainer.style.left = `${currentX}px`;
+    chatContainer.style.top = `${currentY}px`;
+}
+
+function stopDragging() {
+    isDragging = false;
+}
+
+window.addEventListener('load', () => {
+    const rect = chatContainer.getBoundingClientRect();
+    currentX = window.innerWidth - rect.width - 20;
+    currentY = window.innerHeight - rect.height - 20;
+    chatContainer.style.left = `${currentX}px`;
+    chatContainer.style.top = `${currentY}px`;
+});
+
+function adjustChatContainerPosition() {
+    const rect = chatContainer.getBoundingClientRect();
+    const maxX = window.innerWidth - rect.width;
+    const maxY = window.innerHeight - rect.height;
+    currentX = Math.min(currentX, maxX);
+    currentX = Math.max(0, currentX);
+    currentY = Math.min(currentY, maxY);
+    currentY = Math.max(0, currentY);
+    chatContainer.style.left = `${currentX}px`;
+    chatContainer.style.top = `${currentY}px`;
+}
+
+window.addEventListener('resize', adjustChatContainerPosition);
+
+const chatToggle = document.getElementById("chat-toggle");
+const chatForm = document.getElementById("chat-form");
+const chatInput = document.getElementById("chat-input");
+let firstOpen = true;
+
+chatToggle.addEventListener("click", () => {
+    const isHidden = !chatBox.classList.contains("visible");
+    if (isHidden) {
+        chatContainer.style.width = "300px";
+        chatBox.classList.add("visible");
+        chatToggle.setAttribute("aria-expanded", "true");
+        trackClick("ChatDeschis", "Interacțiune", 0);
+        if (!chatMessages.children.length) addMessage(translations.greeting, "bot-message");
+        adjustChatContainerPosition();
+        setTimeout(() => chatInput.focus(), 300);
+        if (firstOpen && ("SpeechRecognition" in window || "webkitSpeechRecognition" in window) && recognition) {
+            recognition.start();
+            firstOpen = false;
+        }
+    } else {
+        chatBox.classList.remove("visible");
+        chatToggle.setAttribute("aria-expanded", "false");
+        trackClick("ChatÎnchis", "Interacțiune", 0);
+        chatContainer.style.width = "auto";
+        chatContainer.style.height = "auto";
+        adjustChatContainerPosition();
+    }
+});
+
+chatForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const userMsg = chatInput.value.trim();
+    if (!userMsg) return;
+    addMessage(userMsg, "user-message");
+    trackClick("MesajChat", "Interacțiune", 0);
+    chatInput.value = "";
+    simulateTyping(() => {
+        getResponseFromSite(userMsg, (answer) => {
+            addMessage(answer, "bot-message");
+        });
+    });
+});
+
+let voiceEnabled = true;
+
+function speak(text) {
+    if (!voiceEnabled || !("speechSynthesis" in window)) return;
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = "ro-RO";
+    utterance.pitch = 0.5;
+    utterance.rate = 1.1;
+    const voices = window.speechSynthesis.getVoices();
+    if (voices.length > 0) {
+        const maleVoice = voices.find(v => v.name.toLowerCase().includes("male") || v.name.toLowerCase().includes("română"));
+        if (maleVoice) utterance.voice = maleVoice;
+    }
+    window.speechSynthesis.speak(utterance);
+    trackClick("IeșireVocală", "Interacțiune", 0);
+}
+
+const voiceToggle = document.getElementById("voice-toggle");
+voiceToggle.addEventListener("click", () => {
+    voiceEnabled = !voiceEnabled;
+    voiceToggle.classList.toggle("disabled", !voiceEnabled);
+    trackClick(voiceEnabled ? "VoceActivată" : "VoceDezactivată", "Interacțiune", 0);
+});
+
+let speechRecognitionSupported = "SpeechRecognition" in window || "webkitSpeechRecognition" in window;
+let recognition = null;
+
+if (speechRecognitionSupported) {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    recognition = new SpeechRecognition();
+    recognition.lang = "ro-RO";
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+    recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        addMessage(transcript, "user-message");
+        trackClick("IntrareVocală", "Interacțiune", 0);
+        simulateTyping(() => {
+            getResponseFromSite(transcript, (answer) => {
+                addMessage(answer, "bot-message");
+            });
+        });
+    };
+    recognition.onend = () => trackClick("VoceOprire", "Interacțiune", 0);
+    recognition.onerror = (event) => trackClick("EroareVoce", "Interacțiune", event.error);
+}
+
+if (!("speechSynthesis" in window)) voiceToggle.style.display = "none";
 </script nonce="xai-ultra2025">
 
 <!-- Scripturi JavaScript -->
